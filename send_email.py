@@ -8,12 +8,25 @@ password = "xyz" # sender mail pass
 sender_email = "sender@gmail.com"
 receiver_email = "receiver@gmail.com"
 
+# is it online?
+isOnline = True
+while isOnline:
+    # text = get the output in stout in a string format
+    ping_out = subprocess.run(['ping', '-c', '1', '-W', '3', '8.8.8.8'], text=True, capture_output=True)
+    ping_out = ping_out.stdout
+    if ping_out.find("1 packets received") > 0:
+        print("Connected")
+        isOnline = False
+    else:
+        print("Not connected, i'm trying again..")
+        time.sleep(10)
+
 # Mail body
-addr = subprocess.check_output(['ifconfig'], universal_newlines=True)
+addr = subprocess.run(['ifconfig'], text=True, capture_output=True)
 message = """\
 Subject: Hi there from the Rpi Immergas.
 
-This is the ip from Rpi:\n\n """  + addr
+This is the ip from Rpi:\n\n """  + addr.stdout
 
 # Create a secure SSL context
 context = ssl.create_default_context()
